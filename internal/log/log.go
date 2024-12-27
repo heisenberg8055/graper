@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"os"
+
+	"github.com/lmittmann/tint"
 )
 
 type Response struct {
@@ -20,7 +22,7 @@ type Err struct {
 }
 
 func LogErr(err Err) {
-	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	logger := slog.New(tint.NewHandler(os.Stderr, nil))
 	slog.SetDefault(logger)
 	slog.LogAttrs(context.Background(), slog.LevelError,
 		"Info Message",
@@ -30,7 +32,7 @@ func LogErr(err Err) {
 }
 
 func LogInfo(response Response) {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	logger := slog.New(tint.NewHandler(os.Stderr, nil))
 	slog.SetDefault(logger)
 	slog.LogAttrs(context.Background(), slog.LevelInfo,
 		"Info Message",
@@ -43,7 +45,7 @@ func LogInfo(response Response) {
 }
 
 func LogError(response Response) {
-	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	logger := slog.New(tint.NewHandler(os.Stderr, nil))
 	slog.SetDefault(logger)
 	slog.LogAttrs(context.Background(), slog.LevelError,
 		"Info Message",
@@ -56,7 +58,7 @@ func LogError(response Response) {
 }
 
 func LogWarn(response Response) {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	logger := slog.New(tint.NewHandler(os.Stderr, nil))
 	slog.SetDefault(logger)
 	slog.LogAttrs(context.Background(), slog.LevelWarn,
 		"Info Message",

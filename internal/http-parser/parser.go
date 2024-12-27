@@ -1,7 +1,6 @@
 package http_parser
 
 import (
-	"errors"
 	"net/http"
 	"net/url"
 	"sync"
@@ -52,11 +51,16 @@ func parseSingleHTML(url string) {
 	body, err := http_client.GetBody(url)
 	elapsed := time.Since(t).String()
 	if err != nil {
-		if errors.Is(err, http.ErrUseLastResponse) {
-			http_log.LogWarn(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: body.StatusCode, Message: "Redirect"})
-		} else {
-			http_log.LogWarn(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: body.StatusCode, Message: err.Error()})
-		}
+		http_log.LogError(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: 0, Message: err.Error()})
+		return
+	}
+	if body.StatusCode >= 400 {
+		http_log.LogError(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: body.StatusCode, Message: "Dead Link"})
+		return
+	}
+	if body.StatusCode >= 299 && body.StatusCode <= 399 {
+		http_log.LogWarn(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: body.StatusCode, Message: "Redirect"})
+		return
 	}
 	http_log.LogInfo(http_log.Response{Method: "GET", Time_taken: elapsed, Url: url, Status: body.StatusCode, Message: "Success"})
 }
