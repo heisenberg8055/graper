@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	http_parser "github.com/heisenberg8055/graper/internal/http-parser"
+	"github.com/heisenberg8055/graper/internal/crawler"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 	Example:    "scraper <url>, scraper --url <url>, scraper -r <url>",
 	Args:       cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		http_parser.Crawler(recrawler, args[0])
+		crawler.Crawler(recrawler, args[0])
 	},
 }
 
