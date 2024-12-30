@@ -8,28 +8,49 @@ import (
 	"github.com/rivo/tview"
 )
 
-func Display(mp *http_log.Map) {
+func Display(mp *http_log.Map, url string) {
 	app := tview.NewApplication()
 	list := tview.NewList()
 	list.SetTitle("Dead Links")
+	var brokenLinks []string
 	for key, val := range mp.Mp {
 		if val {
-			list.AddItem(key, "", '>', func() {
-				var cmd *exec.Cmd
-
-				switch runtime.GOOS {
-				case "darwin":
-					cmd = exec.Command("open", "-a", "Google Chrome", key)
-				case "windows":
-					cmd = exec.Command("cmd", "/c", "start", "chrome", key)
-				case "linux":
-					cmd = exec.Command("xdg-open", key)
-				default:
-
-				}
-				cmd.Run()
-			})
+			brokenLinks = append(brokenLinks, key)
 		}
+	}
+	for _, val := range brokenLinks {
+		list.AddItem(val, "", '>', func() {
+			var cmd *exec.Cmd
+
+			switch runtime.GOOS {
+			case "darwin":
+				cmd = exec.Command("open", "-a", "Google Chrome", val)
+			case "windows":
+				cmd = exec.Command("cmd", "/c", "start", "chrome", val)
+			case "linux":
+				cmd = exec.Command("xdg-open", val)
+			default:
+
+			}
+			cmd.Run()
+		})
+	}
+	if len(brokenLinks) == 0 {
+		list.AddItem(url, "No Broken Links", '>', func() {
+			var cmd *exec.Cmd
+
+			switch runtime.GOOS {
+			case "darwin":
+				cmd = exec.Command("open", "-a", "Google Chrome", url)
+			case "windows":
+				cmd = exec.Command("cmd", "/c", "start", "chrome", url)
+			case "linux":
+				cmd = exec.Command("xdg-open", url)
+			default:
+
+			}
+			cmd.Run()
+		})
 	}
 	list.AddItem("Quit", "Press to exit", 'q', func() {
 		app.Stop()
