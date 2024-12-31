@@ -4,6 +4,8 @@
 
 Graper is a command-line web scraper tool written in golang to detect deld links in a website(4xx or 5xx).
 
+https://github.com/user-attachments/assets/a56346ae-789b-4b10-b51d-f1043f56cd24
+
 ## Overview
 
 The webscraper recursively check every anchor tag on the website found on every page that belongs to the same domain as the website. If a page is on a different domain, the page itself is checked that it's valid, but none of the links on that page is checked.Used Go routines to speed up the process. Running each page processing in it's own go routine, and passing the links through a channel to be then parsed or checked.
